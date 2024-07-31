@@ -4,7 +4,8 @@ CFLAGS = -Werror -Wextra -Werror
 
 NAME = philo
 
-SRC = philo.c parsing.c routine.c
+SRC = src/main.c src/parsing.c src/routine.c src/utils.c src/init.c \
+	src/time.c #src/threads.c 
 
 HEADER = -I include
 
