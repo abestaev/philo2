@@ -1,16 +1,5 @@
 #include "../philo.h"
 
-void	print_message(t_philo *philo, char *msg)
-{
-	pthread_mutex_lock(&philo->data->write_lock);
-	if (1) // todo a update
-	{
-		printf("%ld %s %s\n", (get_current_time() - philo->data->start_time),
-			philo->id, msg);
-	}
-	pthread_mutex_unlock(&philo->data->write_lock);
-}
-
 int	ft_usleep(size_t ms)
 {
 	size_t	start;

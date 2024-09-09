@@ -46,3 +46,12 @@ int ft_strlen(char *str)
         i++;
     return (i);
 }
+
+void	print_message(t_philo *philo, char *msg)
+{
+    if (philo->data->dead_flag)
+        return ;
+	pthread_mutex_lock(&philo->data->write_lock);
+	printf("%ld %d %s\n", (get_current_time() - philo->data->start_time), philo->id + 1, msg);
+	pthread_mutex_unlock(&philo->data->write_lock);
+}

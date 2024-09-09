@@ -1,29 +1,36 @@
-CC = cc
+GREEN = \033[0;32m
+RESET = \033[0m
 
-CFLAGS = -Werror -Wextra -Werror
+CC = cc
+CFLAGS = -Werror -Wextra -Werror -I include -pthread -g3
 
 NAME = philo
 
-SRC = src/main.c src/parsing.c src/routine.c src/utils.c src/init.c \
-	src/time.c #src/threads.c 
+SRC = src/main.c src/parsing.c src/routine.c src/utils.c src/time.c \
+	src/thread.c 
 
-HEADER = -I include
+OBJ_DIR = obj
 
-OBJ = $(SRC:.c=.o)
+OBJ = $(SRC:src/%.c=$(OBJ_DIR)/%.o)
 
 all: $(NAME)
 
-%.o:%.c
-			$(CC) $(CFLAGS) -o $@ -c $< $(HEADER)
+$(OBJ_DIR)/%.o: src/%.c
+	@mkdir -p $(OBJ_DIR)
+	@$(CC) $(CFLAGS) -o $@ -c $<
 
 $(NAME): $(OBJ)
-			$(CC) -o $(NAME) $(OBJ) $(HEADER)
+			@$(CC) -o $(NAME) $(OBJ)
+			@echo "$(GREEN)successfully compiled$(RESET)"
 
 clean:
-			rm -rf $(OBJ)
+			@rm -rf $(OBJ)
+			@echo "Object files cleaned"
 
 fclean:	clean
-			rm $(NAME)
+			@rm -f $(NAME)
+			@echo "Executable $(NAME) removed"
+
 re: fclean all
 
 .PHONY: all clean fclean re
