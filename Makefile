@@ -7,7 +7,7 @@ CFLAGS = -Werror -Wextra -Werror -I include -pthread -g3
 NAME = philo
 
 SRC = src/main.c src/parsing.c src/routine.c src/utils.c src/time.c \
-	src/thread.c src/buffer.c
+	src/thread.c
 
 OBJ_DIR = obj
 

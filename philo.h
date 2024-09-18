@@ -6,7 +6,7 @@
 /*   By: albestae <albestae@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 20:07:48 by albestae          #+#    #+#             */
-/*   Updated: 2024/09/17 12:54:44 by albestae         ###   ########.fr       */
+/*   Updated: 2024/09/18 22:20:14 by albestae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,15 +19,15 @@
 # include <time.h>
 # include <unistd.h>
 // # include <stdbool.h>
-# define BUFFER_SIZE 256
+# define BUFFER_SIZE 1024
 
 typedef struct s_data	t_data;
 
 typedef struct s_buffer
 {
-	int			i;
-	char		str[BUFFER_SIZE];
-}				t_buff;
+	int					i;
+	char				str[BUFFER_SIZE];
+}						t_buff;
 
 typedef struct s_philo
 {
@@ -67,10 +67,15 @@ void					create_threads(t_data *data);
 void					*routine(void *arg);
 void					take_forks(t_philo *philo);
 void					release_forks(t_philo *philo);
-void 					eat(t_philo *philo);
+void					eat(t_philo *philo);
 void					sleep_and_think(t_philo *philo);
 int						ft_usleep(size_t time);
 void					*monitoring(void *arg);
-void 					loop(t_data *data);
+void					loop(t_data *data);
+
+void					print_buffer(t_buff *buff, int fd);
+void					write_str_buffer(t_buff *buff, const char *str);
+void					write_char_buffer(t_buff *buff, char c);
+void					write_longint_buffer(t_buff *buff, long int nb);
 
 #endif

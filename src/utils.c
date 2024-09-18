@@ -1,60 +1,63 @@
 #include "../philo.h"
 
-void    ft_putchar_fd(char c, int fd)
+void				print_buffer(t_buff *buff, int fd)
 {
-    if (fd >= 0)
-        write(fd, &c, 1);
+    write(fd, buff->str, buff->i);
+    buff->i = 0;
 }
 
-void    ft_putstr_fd(char *s, int fd)
+void			write_str_buffer(t_buff *buff, const char *str)
 {
-    if (fd >= 0)
+    int j;
+
+    j = 0;
+    while (str[j])
     {
-        while (s && *s)
-        {
-            write(fd, &*s, 1);
-            s++;
-        }
+        buff->str[buff->i] = str[j];
+        buff->i++;
+        if (buff->i == BUFFER_SIZE)
+            print_buffer(buff, 1);
+        j++;
     }
 }
 
-void    ft_putnbr_fd(long int ln, int fd)
+void			write_char_buffer(t_buff *buff, char c)
 {
-    if (ln < 0)
+    if (buff->i < BUFFER_SIZE - 1)
     {
-        ln *= -1;
-        ft_putchar_fd('-', fd);
-    }
-    if (ln >= 10)
-    {
-        ft_putnbr_fd(ln / 10, fd);
-        ft_putnbr_fd(ln % 10, fd);
+        buff->str[buff->i] = c;
+        buff->i++;
     }
     else
-    {
-        if (fd >= 0)
-            ft_putchar_fd(ln + '0', fd);
-    }
+        print_buffer(buff, 1);
 }
 
-int ft_strlen(char *str)
+void			write_longint_buffer(t_buff *buff, long int nb)
 {
-    int i;
-
-    i = 0;
-    while (str[i])
-        i++;
-    return (i);
+    if (nb < 0)
+    {
+        write_char_buffer(buff, '-');
+        nb *= -1;
+    }
+    if (nb >= 10)
+        write_longint_buffer(buff, nb / 10);
+    write_char_buffer(buff, (nb % 10) + '0');
 }
 
 void	print_message(t_philo *philo, char *msg)
 {
 	pthread_mutex_lock(&philo->data->write_lock);
-    ft_putnbr_fd((get_current_time() - philo->data->start_time), 1);
-    ft_putchar_fd(' ', 1);
-    ft_putnbr_fd(philo->id + 1, 1);
-    ft_putchar_fd(' ', 1);
-    ft_putstr_fd(msg, 1);
-    ft_putchar_fd('\n', 1);
+
+    write_longint_buffer(&philo->data->buffer, get_current_time() - philo->data->start_time);
+    write_char_buffer(&philo->data->buffer, ' ');
+    write_longint_buffer(&philo->data->buffer, philo->id + 1);
+    write_char_buffer(&philo->data->buffer, ' ');
+    write_str_buffer(&philo->data->buffer, msg);
+    // ft_putnbr_fd((get_current_time() - philo->data->start_time), 1);
+    // ft_putchar_fd(' ', 1);
+    // ft_putnbr_fd(philo->id + 1, 1);
+    // ft_putchar_fd(' ', 1);
+    // ft_putstr_fd(msg, 1);
+    // ft_putchar_fd('\n', 1);
 	pthread_mutex_unlock(&philo->data->write_lock);
 }

@@ -6,7 +6,7 @@
 /*   By: albestae <albestae@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 04:56:19 by albestae          #+#    #+#             */
-/*   Updated: 2024/09/17 10:32:50 by albestae         ###   ########.fr       */
+/*   Updated: 2024/09/18 22:59:38 by albestae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,13 @@ void	*even_routine(void *arg)
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
-	while (philo->data->dead_flag == 0)
+	while (1)
 	{
+		// pthread_mutex_lock(&philo->data->dead_lock);
 		eat(philo);
 		sleep_and_think(philo);
+		usleep(120);
+		// pthread_mutex_unlock(&philo->data->dead_lock);
 	}
 	return (NULL);
 }
@@ -49,7 +52,6 @@ void	create_threads(t_data *data)
 		data->philos[i].last_meal = data->start_time;
 		i++;
 	}
-	
 	i = 1;
 	while (i < data->num_of_philos)
 	{
@@ -107,7 +109,7 @@ void	*monitoring(void *arg)
 			if ((time - data->philos[i].last_meal) > data->time_to_die)
 			{
 				data->dead_flag = 1;
-				print_message(&data->philos[i], "died");
+				print_message(&data->philos[i], "died\n");
 				pthread_mutex_unlock(&data->dead_lock);
 				//exit_properly(data);
 				break ;
