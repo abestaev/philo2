@@ -6,7 +6,7 @@
 /*   By: albestae <albestae@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 04:56:17 by albestae          #+#    #+#             */
-/*   Updated: 2024/09/09 23:39:09 by albestae         ###   ########.fr       */
+/*   Updated: 2024/09/13 22:38:43 by albestae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,11 +49,11 @@ void	eat(t_philo *philo)
 	take_forks(philo);
 	print_message(philo, "is eating");
 	ft_usleep(philo->data->time_to_eat);
-	release_forks(philo);
 	pthread_mutex_lock(&philo->data->meal_lock);
 	philo->meals_eaten++;
 	pthread_mutex_unlock(&philo->data->meal_lock);
 	philo->last_meal = get_current_time();
+	release_forks(philo);
 }
 
 void	sleep_and_think(t_philo *philo)

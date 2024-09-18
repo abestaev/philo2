@@ -49,9 +49,12 @@ int ft_strlen(char *str)
 
 void	print_message(t_philo *philo, char *msg)
 {
-    if (philo->data->dead_flag)
-        return ;
 	pthread_mutex_lock(&philo->data->write_lock);
-	printf("%ld %d %s\n", (get_current_time() - philo->data->start_time), philo->id + 1, msg);
+    ft_putnbr_fd((get_current_time() - philo->data->start_time), 1);
+    ft_putchar_fd(' ', 1);
+    ft_putnbr_fd(philo->id + 1, 1);
+    ft_putchar_fd(' ', 1);
+    ft_putstr_fd(msg, 1);
+    ft_putchar_fd('\n', 1);
 	pthread_mutex_unlock(&philo->data->write_lock);
 }

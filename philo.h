@@ -6,7 +6,7 @@
 /*   By: albestae <albestae@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 20:07:48 by albestae          #+#    #+#             */
-/*   Updated: 2024/09/10 00:24:11 by albestae         ###   ########.fr       */
+/*   Updated: 2024/09/17 12:54:44 by albestae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,15 @@
 # include <time.h>
 # include <unistd.h>
 // # include <stdbool.h>
-
+# define BUFFER_SIZE 256
 
 typedef struct s_data	t_data;
+
+typedef struct s_buffer
+{
+	int			i;
+	char		str[BUFFER_SIZE];
+}				t_buff;
 
 typedef struct s_philo
 {
@@ -29,7 +35,6 @@ typedef struct s_philo
 	int					id;
 	int					meals_eaten;
 	size_t				last_meal;
-	// bool				is_alive;
 	pthread_mutex_t		l_fork;
 	pthread_mutex_t		*r_fork;
 	t_data				*data;
@@ -38,13 +43,13 @@ typedef struct s_philo
 typedef struct s_data
 {
 	int					num_of_philos;
-	int					time_to_die;
+	size_t				time_to_die;
 	int					time_to_eat;
 	int					time_to_sleep;
 	int					meals_to_eat;
 	size_t				start_time;
 	int					dead_flag;
-
+	t_buff				buffer;
 	pthread_mutex_t		dead_lock;
 	pthread_mutex_t		meal_lock;
 	pthread_mutex_t		write_lock;
