@@ -15,20 +15,17 @@ void			write_str_buffer(t_buff *buff, const char *str)
     {
         buff->str[buff->i] = str[j];
         buff->i++;
-        if (buff->i == BUFFER_SIZE)
-            print_buffer(buff, 1);
         j++;
+        if (buff->i == buff->size)
+            print_buffer(buff, 1);
     }
 }
 
 void			write_char_buffer(t_buff *buff, char c)
 {
-    if (buff->i < BUFFER_SIZE - 1)
-    {
-        buff->str[buff->i] = c;
-        buff->i++;
-    }
-    else
+    buff->str[buff->i] = c;
+    buff->i++;
+    if (buff->i == buff->size)
         print_buffer(buff, 1);
 }
 
@@ -46,18 +43,44 @@ void			write_longint_buffer(t_buff *buff, long int nb)
 
 void	print_message(t_philo *philo, char *msg)
 {
-	pthread_mutex_lock(&philo->data->write_lock);
+    int ret;
 
-    write_longint_buffer(&philo->data->buffer, get_current_time() - philo->data->start_time);
+    ret = 0;
+    pthread_mutex_lock(&philo->data->dead_lock);
+    ret = philo->data->dead_flag;
+    pthread_mutex_unlock(&philo->data->dead_lock);
+	pthread_mutex_lock(&philo->data->write_lock);
+    if (ret)
+    {
+        pthread_mutex_unlock(&philo->data->write_lock);
+        return ;
+    }
+    write_longint_buffer(&philo->data->buffer, get_current_time() - philo->start_time);
     write_char_buffer(&philo->data->buffer, ' ');
     write_longint_buffer(&philo->data->buffer, philo->id + 1);
     write_char_buffer(&philo->data->buffer, ' ');
     write_str_buffer(&philo->data->buffer, msg);
-    // ft_putnbr_fd((get_current_time() - philo->data->start_time), 1);
-    // ft_putchar_fd(' ', 1);
-    // ft_putnbr_fd(philo->id + 1, 1);
-    // ft_putchar_fd(' ', 1);
-    // ft_putstr_fd(msg, 1);
-    // ft_putchar_fd('\n', 1);
+	pthread_mutex_unlock(&philo->data->write_lock);
+}
+
+void	print_death(t_philo *philo, char *msg)
+{
+    int ret;
+
+    ret = 0;
+	pthread_mutex_lock(&philo->data->write_lock);
+    // pthread_mutex_lock(&philo->data->dead_lock);
+    // ret = philo->data->dead_flag;
+    // pread_mutex_unlock(&philo->data->dead_lock);
+    if (ret)
+    {
+        pthread_mutex_unlock(&philo->data->write_lock);
+        return ;
+    }
+    write_longint_buffer(&philo->data->buffer, get_current_time() - philo->start_time);
+    write_char_buffer(&philo->data->buffer, ' ');
+    write_longint_buffer(&philo->data->buffer, philo->id + 1);
+    write_char_buffer(&philo->data->buffer, ' ');
+    write_str_buffer(&philo->data->buffer, msg);
 	pthread_mutex_unlock(&philo->data->write_lock);
 }

@@ -6,7 +6,7 @@
 /*   By: albestae <albestae@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 04:56:17 by albestae          #+#    #+#             */
-/*   Updated: 2024/09/18 22:04:05 by albestae         ###   ########.fr       */
+/*   Updated: 2024/09/19 01:30:02 by albestae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,9 @@ void	eat(t_philo *philo)
 	pthread_mutex_lock(&philo->data->meal_lock);
 	philo->meals_eaten++;
 	pthread_mutex_unlock(&philo->data->meal_lock);
+	pthread_mutex_lock(&philo->data->meal_lock);
 	philo->last_meal = get_current_time();
+	pthread_mutex_unlock(&philo->data->meal_lock);
 	release_forks(philo);
 }
 
