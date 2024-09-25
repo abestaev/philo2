@@ -6,7 +6,7 @@
 /*   By: albestae <albestae@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 04:56:17 by albestae          #+#    #+#             */
-/*   Updated: 2024/09/19 01:30:02 by albestae         ###   ########.fr       */
+/*   Updated: 2024/09/19 04:14:09 by albestae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,4 +63,16 @@ void	sleep_and_think(t_philo *philo)
 	print_message(philo, "is sleeping\n");
 	ft_usleep(philo->data->time_to_sleep);
 	print_message(philo, "is thinking\n");
+}
+
+void	print_death(t_philo *philo, char *msg)
+{
+	pthread_mutex_lock(&philo->data->write_lock);
+	write_longint_buffer(&philo->data->buffer, get_current_time()
+		- philo->start_time);
+	write_char_buffer(&philo->data->buffer, ' ');
+	write_longint_buffer(&philo->data->buffer, philo->id + 1);
+	write_char_buffer(&philo->data->buffer, ' ');
+	write_str_buffer(&philo->data->buffer, msg);
+	pthread_mutex_unlock(&philo->data->write_lock);
 }

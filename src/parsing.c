@@ -6,7 +6,7 @@
 /*   By: albestae <albestae@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 04:56:08 by albestae          #+#    #+#             */
-/*   Updated: 2024/09/08 04:56:29 by albestae         ###   ########.fr       */
+/*   Updated: 2024/09/19 22:18:37 by albestae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ static int	ft_valid_arg(char *str)
 
 int	ft_parsing(char **argv)
 {
-	if (ft_valid_arg(argv[1]) || ft_atoi(argv[1]) > 200)
+	if (ft_valid_arg(argv[1]) || ft_atoi(argv[1]) > 200 || ft_atoi(argv[1]) < 1)
 		return (write(2, "Invalid philosophers number\n", 29), 1);
 	if (ft_valid_arg(argv[2]))
 		return (write(2, "Invalid time to die\n", 21));

@@ -6,7 +6,7 @@
 /*   By: albestae <albestae@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 20:07:48 by albestae          #+#    #+#             */
-/*   Updated: 2024/09/19 03:48:36 by albestae         ###   ########.fr       */
+/*   Updated: 2024/09/25 23:38:34 by albestae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,16 +18,15 @@
 # include <sys/time.h>
 # include <time.h>
 # include <unistd.h>
-// # include <stdbool.h>
 
 typedef struct s_data	t_data;
 
 typedef struct s_buffer
 {
 	int					i;
-	int				size;
+	int					size;
 	char				*str;
-}						t_buff;	
+}						t_buff;
 
 typedef struct s_philo
 {
@@ -53,7 +52,7 @@ typedef struct s_data
 	size_t				start_time;
 	int					dead_flag;
 	t_buff				buffer;
-	
+	int					meals_done;
 	pthread_mutex_t		dead_lock;
 	pthread_mutex_t		meal_lock;
 	pthread_mutex_t		write_lock;
@@ -82,7 +81,8 @@ void					write_str_buffer(t_buff *buff, const char *str);
 void					write_char_buffer(t_buff *buff, char c);
 void					write_longint_buffer(t_buff *buff, long int nb);
 
-
-void	print_death(t_philo *philo, char *msg);	
+void					print_death(t_philo *philo, char *msg);
+size_t					get_meal_time(t_philo *philo);
+int						check_meals(t_data *data);
 
 #endif

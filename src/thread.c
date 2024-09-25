@@ -6,7 +6,7 @@
 /*   By: albestae <albestae@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 04:56:19 by albestae          #+#    #+#             */
-/*   Updated: 2024/09/19 03:58:31 by albestae         ###   ########.fr       */
+/*   Updated: 2024/09/25 23:41:05 by albestae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,24 +31,23 @@ void	*routine(void *arg)
 	philo = (t_philo *)arg;
 	while (check_death(philo))
 	{
-		eat(philo);
-		sleep_and_think(philo);
+		if (philo->data->num_of_philos == 1)
+			usleep(100);
+		else
+		{
+			if (philo->meals_eaten != philo->data->meals_to_eat)
+				eat(philo);
+			if (philo->meals_eaten != philo->data->meals_to_eat)
+				sleep_and_think(philo);
+		}
 	}
 	return (NULL);
 }
 
-void	create_threads(t_data *data)
+static void	launch_philo(t_data *data)
 {
-	int			i;
-	pthread_t	dead_flag;
+	int	i;
 
-	i = 0;
-	data->start_time = get_current_time();
-	while (i < data->num_of_philos)
-	{
-		data->philos[i].last_meal = data->start_time;
-		i++;
-	}
 	i = 1;
 	while (i < data->num_of_philos)
 	{
@@ -63,6 +62,21 @@ void	create_threads(t_data *data)
 			&data->philos[i]);
 		i += 2;
 	}
+}
+
+void	create_threads(t_data *data)
+{
+	int			i;
+	pthread_t	dead_flag;
+
+	i = 0;
+	data->start_time = get_current_time();
+	while (i < data->num_of_philos)
+	{
+		data->philos[i].last_meal = data->start_time;
+		i++;
+	}
+	launch_philo(data);
 	pthread_create(&dead_flag, NULL, &monitoring, data);
 	pthread_join(dead_flag, NULL);
 	i = 0;
@@ -75,27 +89,18 @@ void	create_threads(t_data *data)
 
 void	*monitoring(void *arg)
 {
-	int i;
-	size_t time;
-	t_data *data;
+	int		i;
+	size_t	time;
+	t_data	*data;
 
 	data = (t_data *)arg;
 	while (1)
 	{
-		// pthread_mutex_lock(&data->dead_lock);
-		// if (data->dead_flag)
-		// {
-		// 	pthread_mutex_unlock(&data->dead_lock);
-		// 	break ;
-		// }
-		// pthread_mutex_unlock(&data->dead_lock);
-		i = 0;
-		while (i < data->num_of_philos)
+		i = -1;
+		while (++i < data->num_of_philos)
 		{
-			pthread_mutex_lock(&data->meal_lock);
-			time  = get_current_time() - data->philos[i].last_meal;
-			pthread_mutex_unlock(&data->meal_lock);
-			if ((time ) > data->time_to_die)
+			time = get_meal_time(&data->philos[i]);
+			if ((time) > data->time_to_die)
 			{
 				pthread_mutex_lock(&data->dead_lock);
 				print_death(&data->philos[i], "died\n");
@@ -103,9 +108,10 @@ void	*monitoring(void *arg)
 				pthread_mutex_unlock(&data->dead_lock);
 				return (NULL);
 			}
-			i++;
 		}
-		usleep(240);
+		if (check_meals(data))
+			return (NULL);
+		usleep(120);
 	}
 	return (NULL);
 }

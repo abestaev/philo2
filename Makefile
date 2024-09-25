@@ -6,8 +6,8 @@ CFLAGS = -Werror -Wextra -Werror -I include -pthread -g3
 
 NAME = philo
 
-SRC = src/main.c src/parsing.c src/routine.c src/utils.c src/time.c \
-	src/thread.c
+SRC = src/main.c src/parsing.c src/routine.c src/utils.c \
+	src/time_and_utils.c src/thread.c
 
 OBJ_DIR = obj
 
@@ -24,7 +24,7 @@ $(NAME): $(OBJ)
 			@echo "$(GREEN)successfully compiled$(RESET)"
 
 clean:
-			@rm -rf $(OBJ)
+			@rm -rf $(OBJ_DIR)
 			@echo "Object files cleaned"
 
 fclean:	clean

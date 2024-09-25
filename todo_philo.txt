@@ -1,5 +1,0 @@
-to do philo 
-
-death if all meal eaten
-
-faire un ficher getters et setters ? 
